@@ -59,7 +59,8 @@ sudo apt-get install -qqy git
 echo "clone devstack..."
 #clone devstack
 if [ ! -e devstack ]; then
-	git clone -q https://github.com/openstack-dev/devstack.git
+	#git clone -q https://github.com/openstack-dev/devstack.git
+	git clone -q https://github.com/ilivessevili/devstack.git
 fi
 echo 'devstack is already exits skip'
 echo "copy $LOCALRC..."
