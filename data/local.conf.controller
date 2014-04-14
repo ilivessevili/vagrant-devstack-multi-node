@@ -1,0 +1,151 @@
+[[local|localrc]]
+# Misc
+# IP Setting
+##############################
+# public ip setting
+##############################
+#HOST_IP=192.168.56.11
+SERVICE_HOST=192.168.56.11
+#KEYSTONE_SERVICE_HOST=$SERVICE_HOST
+KEYSTONE_SERVICE_HOST=192.168.56.11
+
+##############################
+# managment ip setting
+##############################
+KEYSTONE_AUTH_HOST=10.1.2.44
+#KEYSTONE_ADMIN_BIND_HOST=$KEYSTONE_AUTH_HOST
+KEYSTONE_ADMIN_BIND_HOST=0.0.0.0
+DATABASE_HOST=10.1.2.44
+RABBIT_HOST=10.1.2.44
+
+
+##############################
+# password setting
+##############################
+# database
+DATABASE_PASSWORD=admin
+ADMIN_PASSWORD=admin
+SERVICE_PASSWORD=admin
+SERVICE_TOKEN=admin
+RABBIT_PASSWORD=admin
+
+#################
+# other  setting
+#################
+OFFLINE=false
+DEST=/opt/openstack
+PIP_DOWNLOAD_CACHE=$DEST/pip_cache
+SERVICE_TIMEOUT=120
+#GIT_TIMEOUT=1200
+
+#change from github to csdn
+#GIT_BASE=https://code.csdn.net
+GIT_BASE=https://github.com
+
+# Enable Logging
+LOGFILE=$DEST/logs/stack.sh.log
+VERBOSE=True
+DEBUG=True
+LOG_COLOR=True
+SCREEN_LOGDIR=$DEST/logs
+
+##################
+# branch  setting
+##################
+# using icehouse rc1
+NOVA_BRANCH=milestone-proposed
+KEYSTONE_BRANCH=milestone-proposed
+GLANCE_BRANCH=milestone-proposed
+NEUTRON_BRANCH=milestone-proposed
+HORIZON_BRANCH=milestone-proposed
+IRONIC_BRANCH=milestone-proposed
+CEILOMETER_BRANCH=milestone-proposed
+
+##############################
+# service  setting
+##############################
+# Pre-requisite(common services)
+ENABLED_SERVICES=rabbit,mysql,key,glance
+
+# Nova
+#ENABLED_SERVICES+=,n-api,n-cell,n-crt,n-obj,n-cpu,n-cond,n-sch
+ENABLED_SERVICES+=,n-api,n-cell,n-crt,n-obj,n-cond,n-sch
+
+# Glance
+ENABLED_SERVICES+=,g-api,g-reg
+IMAGE_URLS+=",https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img"
+
+# Neutron
+#ENABLED_SERVICES+=,q-svc,q-agt,q-dhcp,q-l3,q-meta,neutron
+disable_service n-net
+enable_service q-svc
+enable_service neutron
+
+## Neutron settings ##
+######################
+#neutron host setting
+Q_PORT=9696
+Q_HOST=$SERVICE_HOST
+
+#ENABLE_TENANT_TUNNELS=True
+#TENANT_TUNNEL_RANGES=${TENANT_TUNNEL_RANGE:-1:1000}
+#OVS_PHYSICAL_BRIDGE=${OVS_PHYSICAL_BRIDGE:-}
+
+# private network
+#NETWORK_GATEWAY=10.0.0.1
+#PRIVATE_SUBNET_NAME=mysubnet
+#FIXED_RANGE=10.10.10.0/25
+
+#Q_L3_ROUTER_PER_TENANT=True
+#Q_ROUTER_NAME=myrouter
+#PRIVATE_SUBNET_NAME=p-subnet
+
+# public network
+#PUBLIC_NETWORK_NAME=ournet
+#Q_FLOATING_ALLOCATION_POOL=192.168.10.0/24
+#PUBLIC_NETWORK_GATEWAY=192.168.10.1
+#PUBLIC_NETWORK_GATEWAY=172.24.4.1
+#PUBLIC_SUBNET_NAME=our-subnet
+#FLOATING_RANGE=192.168.10/26
+
+####################
+# Neutron Plugins
+####################
+## openvswitch 
+#Q_PLUGIN=openvswitch
+#Q_ADMIN_USERNAME=${Q_ADMIN_USERNAME:-neutron}
+
+## Default auth strategy
+#Q_AUTH_STRATEGY=${Q_AUTH_STRATEGY:-keystone}
+#
+## Use namespace or not
+#Q_USE_NAMESPACE=${Q_USE_NAMESPACE:-True}
+#
+#Q_USE_ROOTWRAP=${Q_USE_ROOTWRAP:-True}
+##
+## Meta data IP
+#Q_META_DATA_IP=${Q_META_DATA_IP:-$SERVICE_HOST}
+## Allow Overlapping IP among subnets
+#Q_ALLOW_OVERLAPPING_IP=${Q_ALLOW_OVERLAPPING_IP:-True}
+#
+## Use neutron-debug command
+#Q_USE_DEBUG_COMMAND=${Q_USE_DEBUG_COMMAND:-False}
+#
+## l3 settings
+#Q_L3_ENABLED=True
+## L3 routers exist per tenant
+#Q_L3_ROUTER_PER_TENANT=True
+
+# Cinder
+ENABLED_SERVICES+=,cinder,c-api,c-vol,c-sch
+
+#Horizon
+ENABLED_SERVICES+=,horizon
+
+# Heat - Orchestration Service
+#ENABLED_SERVICES+=,heat,h-api,h-api-cfn,h-api-cw,h-eng
+#IMAGE_URLS+=",http://fedorapeople.org/groups/heat/prebuilt-jeos-images/F17-x86_64-cfntools.qcow2"
+
+# Ceilometer - Metering Service (metering + alarming)
+#ENABLED_SERVICES+=,ceilometer-acompute,ceilometer-acentral,ceilometer-collector,ceilometer-api
+#ENABLED_SERVICES+=,ceilometer-alarm-notify,ceilometer-alarm-eval

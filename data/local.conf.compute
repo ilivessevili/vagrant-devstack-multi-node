@@ -1,0 +1,94 @@
+[[local|localrc]]
+# Misc
+## data networking
+HOST_IP=172.168.124.46
+
+## managenet networking
+MYSQL_HOST=192.168.56.11
+#RABBIT_HOST=192.168.56.11
+RABBIT_HOST=10.1.2.44
+DATABASE_HOST=10.1.2.44
+GLANCE_HOSTPORT=10.1.2.44:9292
+KEYSTONE_AUTH_HOST=10.1.2.44
+
+## public networking
+#GLANCE_HOSTPORT=192.168.56.11:9292
+SERVICE_HOST=192.168.56.11
+KEYSTONE_SERVICE_HOST=192.168.56.11
+
+# configure keystone service host
+
+################
+# other settings
+################
+DATABASE_TYPE=mysql
+OFFLINE=false
+DEST=/opt/openstack
+#HTTP_PROXY=http://proxy.houston.hp.com:8080
+#HTTPS_PROXY=https://proxy.houston.hp.com:8080
+PIP_DOWNLOAD_CACHE=$DEST/pip_cache
+SERVICE_TIMEOUT=120
+#GIT_TIMEOUT=1200
+
+#change from github to csdn
+#GIT_BASE=https://code.csdn.net
+GIT_BASE=https://github.com
+
+# Enable Logging
+LOGFILE=$DEST/logs/stack.sh.log
+VERBOSE=True
+LOG_COLOR=True
+SCREEN_LOGDIR=$DEST/logs
+
+
+##################
+# password setting
+##################
+DATABASE_PASSWORD=admin
+ADMIN_PASSWORD=admin
+SERVICE_PASSWORD=admin
+SERVICE_TOKEN=admin
+RABBIT_PASSWORD=admin
+
+#configure neutron host`
+Q_HOST=192.168.56.12
+#################
+# service setting
+#################
+#ENABLED_SERVICES=n-cpu,n-api,c-sch,c-api,c-vol
+ENABLED_SERVICES=n-cpu
+
+####################
+# branching setting
+####################
+# using icehouse rc1
+NOVA_BRANCH=milestone-proposed
+KEYSTONE_BRANCH=milestone-proposed
+GLANCE_BRANCH=milestone-proposed
+NEUTRON_BRANCH=milestone-proposed
+HORIZON_BRANCH=milestone-proposed
+IRONIC_BRANCH=milestone-proposed
+CEILOMETER_BRANCH=milestone-proposed
+
+# Nova
+#ENABLED_SERVICES+=,-n-api,-n-crt,-n-obj,n-cpu,-n-cond,n-sch
+
+# Neutron
+#ENABLED_SERVICES+=,q-svc,q-agt,q-dhcp,q-l3,q-meta,neutron
+disable_service n-net
+#enable_service q-svc
+enable_service q-agt
+#enable_service q-meta
+
+#########################
+# Neutron Plugin Settings
+#########################
+
+##############
+# openvswitch
+##############
+Q_PLUGIN=openvswitch
+# GRE Tunnelling
+ENABLE_TENANT_TUNNELS=True
+TENANT_TUNNEL_RANGES=${TENANT_TUNNEL_RANGE:-1:1000}
+
