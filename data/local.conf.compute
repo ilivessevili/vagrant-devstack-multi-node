@@ -1,26 +1,7 @@
 [[local|localrc]]
-# Misc
-## data networking
-HOST_IP=172.168.124.46
-
-## managenet networking
-MYSQL_HOST=192.168.56.11
-#RABBIT_HOST=192.168.56.11
-RABBIT_HOST=10.1.2.44
-DATABASE_HOST=10.1.2.44
-GLANCE_HOSTPORT=10.1.2.44:9292
-KEYSTONE_AUTH_HOST=10.1.2.44
-
-## public networking
-#GLANCE_HOSTPORT=192.168.56.11:9292
-SERVICE_HOST=192.168.56.11
-KEYSTONE_SERVICE_HOST=192.168.56.11
-
-# configure keystone service host
-
-################
-# other settings
-################
+#################
+# common settings
+#################
 DATABASE_TYPE=mysql
 OFFLINE=false
 DEST=/opt/openstack
@@ -40,6 +21,27 @@ VERBOSE=True
 LOG_COLOR=True
 SCREEN_LOGDIR=$DEST/logs
 
+####################
+#networking settings
+####################
+
+## data networking
+HOST_IP=172.168.124.46
+
+## managenet networking
+MYSQL_HOST=192.168.56.11
+#RABBIT_HOST=192.168.56.11
+RABBIT_HOST=10.1.2.44
+DATABASE_HOST=10.1.2.44
+GLANCE_HOSTPORT=10.1.2.44:9292
+KEYSTONE_AUTH_HOST=10.1.2.44
+
+## public networking
+#GLANCE_HOSTPORT=192.168.56.11:9292
+SERVICE_HOST=192.168.56.11
+KEYSTONE_SERVICE_HOST=192.168.56.11
+
+# configure keystone service host
 
 ##################
 # password setting
@@ -74,7 +76,6 @@ CEILOMETER_BRANCH=milestone-proposed
 #ENABLED_SERVICES+=,-n-api,-n-crt,-n-obj,n-cpu,-n-cond,n-sch
 
 # Neutron
-#ENABLED_SERVICES+=,q-svc,q-agt,q-dhcp,q-l3,q-meta,neutron
 disable_service n-net
 #enable_service q-svc
 enable_service q-agt

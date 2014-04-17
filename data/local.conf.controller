@@ -1,5 +1,32 @@
 [[local|localrc]]
-# Misc
+##############################
+# common setting
+##############################
+## default install dir
+DEST=/opt/openstack
+PIP_DOWNLOAD_CACHE=$DEST/pip_cache
+
+##  Enable Logging
+LOGFILE=$DEST/logs/stack.sh.log
+VERBOSE=True
+DEBUG=True
+LOG_COLOR=True
+SCREEN_LOGDIR=$DEST/logs
+
+#SYSLOG=True
+#SYSLOG_HOST=$HOST_IP
+#SYSLOG_PORT=516
+
+
+## timeouts
+SERVICE_TIMEOUT=120
+#GIT_TIMEOUT=1200
+
+#RECLONE=yes
+OFFLINE=false
+
+MULTI_HOST=True
+##############################
 # IP Setting
 ##############################
 # public ip setting
@@ -32,22 +59,11 @@ RABBIT_PASSWORD=admin
 #################
 # other  setting
 #################
-OFFLINE=false
-DEST=/opt/openstack
-PIP_DOWNLOAD_CACHE=$DEST/pip_cache
-SERVICE_TIMEOUT=120
-#GIT_TIMEOUT=1200
 
 #change from github to csdn
 #GIT_BASE=https://code.csdn.net
 GIT_BASE=https://github.com
 
-# Enable Logging
-LOGFILE=$DEST/logs/stack.sh.log
-VERBOSE=True
-DEBUG=True
-LOG_COLOR=True
-SCREEN_LOGDIR=$DEST/logs
 
 ##################
 # branch  setting
@@ -69,7 +85,7 @@ ENABLED_SERVICES=rabbit,mysql,key,glance
 
 # Nova
 #ENABLED_SERVICES+=,n-api,n-cell,n-crt,n-obj,n-cpu,n-cond,n-sch
-ENABLED_SERVICES+=,n-api,n-cell,n-crt,n-obj,n-cond,n-sch
+ENABLED_SERVICES+=,n-api,n-crt,n-obj,n-cond,n-sch
 
 # Glance
 ENABLED_SERVICES+=,g-api,g-reg
@@ -79,34 +95,44 @@ IMAGE_URLS+=",https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x8
 #ENABLED_SERVICES+=,q-svc,q-agt,q-dhcp,q-l3,q-meta,neutron
 disable_service n-net
 enable_service q-svc
+# enable l3 letting neutron to create initial network
+enable_service q-13
 enable_service neutron
 
 ## Neutron settings ##
 ######################
 #neutron host setting
-Q_PORT=9696
 Q_HOST=$SERVICE_HOST
+Q_PORT=9696
+Q_ROUTER_NAME=myrouter
 
-#ENABLE_TENANT_TUNNELS=True
-#TENANT_TUNNEL_RANGES=${TENANT_TUNNEL_RANGE:-1:1000}
+# Tunnelling 
+ENABLE_TENANT_TUNNELS=True
+TENANT_TUNNEL_RANGES=${TENANT_TUNNEL_RANGE:-1:1000}
 #OVS_PHYSICAL_BRIDGE=${OVS_PHYSICAL_BRIDGE:-}
 
+# configure public/private network
 # private network
-#NETWORK_GATEWAY=10.0.0.1
-#PRIVATE_SUBNET_NAME=mysubnet
-#FIXED_RANGE=10.10.10.0/25
+NETWORK_GATEWAY=10.10.10.1
+PRIVATE_SUBNET_NAME=mysubnet
 
-#Q_L3_ROUTER_PER_TENANT=True
-#Q_ROUTER_NAME=myrouter
-#PRIVATE_SUBNET_NAME=p-subnet
 
 # public network
-#PUBLIC_NETWORK_NAME=ournet
-#Q_FLOATING_ALLOCATION_POOL=192.168.10.0/24
-#PUBLIC_NETWORK_GATEWAY=192.168.10.1
-#PUBLIC_NETWORK_GATEWAY=172.24.4.1
-#PUBLIC_SUBNET_NAME=our-subnet
+PUBLIC_NETWORK_NAME=ournet
+PUBLIC_SUBNET_NAME=our-subnet
+PUBLIC_NETWORK_GATEWAY=192.168.10.1
 #FLOATING_RANGE=192.168.10/26
+
+
+# configure ip pool
+FIXED_RANGE=10.10.10.0/24
+#FLOATING_RANGE=127.24.0.0/24
+FLOATING_RANGE=192.168.10.0/24
+#Q_FLOATING_ALLOCATION_POOL=192.168.10.0/24
+Q_FLOATING_ALLOCATION_POOL=start=192.168.10.2,end=192.168.10.100
+
+# configure l3
+Q_L3_ROUTER_PER_TENANT=True
 
 ####################
 # Neutron Plugins
@@ -132,20 +158,33 @@ Q_HOST=$SERVICE_HOST
 #Q_USE_DEBUG_COMMAND=${Q_USE_DEBUG_COMMAND:-False}
 #
 ## l3 settings
-#Q_L3_ENABLED=True
+Q_L3_ENABLED=True
 ## L3 routers exist per tenant
 #Q_L3_ROUTER_PER_TENANT=True
 
 # Cinder
 ENABLED_SERVICES+=,cinder,c-api,c-vol,c-sch
+VOLUME_GROUP=stack-volumes
+VOLUME_NAME_PREFIX=volume-
+VOLUME_BACKING_FILE_SIZE=10250M
 
 #Horizon
 ENABLED_SERVICES+=,horizon
 
+####################
+# Optional Services
+####################
+# Swift
+#enable_service s-proxy s-object s-container s-account
+#SWIFT_HASH=66a3d6b56c1f479c8b4e70ab5c2000f5
+#SWIFT_REPLICAS=3
+#SWIFT_DATA_DIR=$DEST/data/swift
+
 # Heat - Orchestration Service
-#ENABLED_SERVICES+=,heat,h-api,h-api-cfn,h-api-cw,h-eng
-#IMAGE_URLS+=",http://fedorapeople.org/groups/heat/prebuilt-jeos-images/F17-x86_64-cfntools.qcow2"
+ENABLED_SERVICES+=,heat,h-api,h-api-cfn,h-api-cw,h-eng
+IMAGE_URLS+=",http://fedorapeople.org/groups/heat/prebuilt-jeos-images/F17-x86_64-cfntools.qcow2"
 
 # Ceilometer - Metering Service (metering + alarming)
-#ENABLED_SERVICES+=,ceilometer-acompute,ceilometer-acentral,ceilometer-collector,ceilometer-api
-#ENABLED_SERVICES+=,ceilometer-alarm-notify,ceilometer-alarm-eval
+ENABLED_SERVICES+=,ceilometer-acompute,ceilometer-acentral,ceilometer-collector,ceilometer-api
+ENABLED_SERVICES+=,ceilometer-alarm-notify,ceilometer-alarm-eval
+
